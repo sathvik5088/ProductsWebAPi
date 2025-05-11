@@ -2,20 +2,21 @@ using Microsoft.EntityFrameworkCore;
 using ProductswebAPI.Models;
 using ProductswebAPI.Data;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("dsc")));
+// Configure Kestrel to listen on all interfaces at port 80
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("dsc")));
 
-// Add services to the container.
 builder.Services.AddControllers(); // Add support for controllers
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Enable Swagger in both Development and Production
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
@@ -24,8 +25,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 
-// Enable routing to controllers
 app.MapControllers(); 
 
-app.Urls.Add("http://0.0.0.0:80");
 app.Run();
