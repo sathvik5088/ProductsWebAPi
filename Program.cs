@@ -27,4 +27,5 @@ app.UseHttpsRedirection();
 // Enable routing to controllers
 app.MapControllers(); 
 
-app.Run("http://0.0.0.0:80");
+app.Urls.Add("http://0.0.0.0:80");
+app.Run();
